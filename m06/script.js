@@ -9,8 +9,6 @@
 // Lihat hasilnya lewat Live Server (bukan klik dua kali index.html) — sama
 // seperti Pertemuan 5, karena file ini dimuat sebagai module.
 
-import { isFirstRun } from "vitest";
-
 const KUNCI_PENYIMPANAN = 'taman-baca:daftar-bacaan';
 
 // Satu objek untuk seluruh data aplikasi. Level 3 memastikan semua fungsi
@@ -126,7 +124,7 @@ export function render(state) {
  
   if(daftarBacaan.length === 0){
     const pesan = document.createElement(adalahList ? 'li' : 'p');
-    pesan.textContent = 'Gada buku di daftar bacaan.';
+    pesan.textContent = 'Belum ada buku di daftar bacaan.';
     wadahBacaan.append(pesan);
     return;
   }

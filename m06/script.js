@@ -158,7 +158,6 @@ export function render(state) {
 // - Level 5 — panggil render(state) di akhir, supaya tampilan langsung
 //   berubah tanpa kode lain perlu memanggilnya lagi.
 export function tambahKeBacaan(buku) {
-  // tulis di sini
   const judul = typeof buku?.judul === 'string' ? buku.judul.trim() : '';
   if(!judul) return;
   if(state.daftarBacaan.some((b) => b.judul === buku.judul)){
@@ -183,16 +182,17 @@ export function tambahKeBacaan(buku) {
 // Ambil data buku dari dataset tombol (judul, penulis, harga), lalu panggil
 // tambahKeBacaan(...).
 export function pasangDelegasiKatalog() {
-  const katalog = document.querySelector('#katalog');
-  katalog.addEventListener('click', (event) => {
-    const tombol = event.target.closest('[data-aksi="tambah-bacaan"]');
-    if (!tombol || !katalog.contains(tombol)) return;
- 
-    tambahKeBacaan({
-      judul: tombol.dataset.judul,
-      penulis: tombol.dataset.penulis,
-      harga: Number(tombol.dataset.harga),
-    });
+  let katalog = document.querySelector('#katalog');
+  katalog.addEventListener('click', function(event) {
+    const tombol = event.target.closest('button[data-aksi="tambah-bacaan"]');
+    if (tombol) {
+      const buku = {
+        judul: tombol.dataset.judul,
+        penulis: tombol.dataset.penulis,
+        harga: Number(tombol.dataset.harga),
+      };
+      tambahKeBacaan(buku);
+    }
   });
 }
 
@@ -201,16 +201,18 @@ export function pasangDelegasiKatalog() {
 // Bungkus dengan try/catch, dan kalau gagal atau hasilnya bukan array,
 // kembalikan array kosong saja — jangan biarkan aplikasi crash.
 export function muatDaftarBacaan() {
-  try{
-     const tersimpan = localStorage.getItem(KUNCI_PENYIMPANAN);
-  return JSON.parse(tersimpan);
-  return  Array.isArray(hasil) ? hasil : [];
-  }catch {
-    return[];
-  }
- 
+  const tersimpan = localStorage.getItem(KUNCI_PENYIMPANAN);
 
+  if (!tersimpan) return [];
+
+  try {
+    const data = JSON.parse(tersimpan);
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    return [];
+  }
 }
+ 
 
 // -------------------------------------------------------------- BOOTSTRAP
 
